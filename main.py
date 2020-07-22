@@ -77,7 +77,7 @@ def publish_file_on_wall_vk(
 
 def main():
     load_dotenv()
-    client_key_vk = os.getenv('access_key')
+    client_key_vk = os.getenv('access_token')
     group_id_vk = os.getenv('access_group_id_vk')
     owner_id_vk = os.getenv('access_owner_id_vk')
     user_id_vk = os.getenv('access_user_id_vk')
