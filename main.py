@@ -4,22 +4,22 @@ import random
 from dotenv import load_dotenv
 
 
-def download_image_from_xcsd():
+def download_image_from_xkcd():
     number_of_choice = random.randint(1, 2334)
     url = f'http://xkcd.com/{number_of_choice}/info.0.json'
     response = requests.get(url)
     response.raise_for_status()
-    response_from_xcsd = response.json()
+    response_from_xkcd = response.json()
     image_response = response.json()['img']
     file_response = requests.get(image_response)
     filename_response = response.json()['title']
     with open(filename_response + '.png', 'wb') as file:
         file.write(file_response.content)
-    return response_from_xcsd
+    return response_from_xkcd
 
 
-def upload_file_to_vk(client_key_vk, group_id_vk, response_from_xcsd):
-    filename = response_from_xcsd['title']
+def upload_file_to_vk(client_key_vk, group_id_vk, response_from_xkcd):
+    filename = response_from_xkcd['title']
     url = 'https://api.vk.com/method/photos.getWallUploadServer'
     access_vk = {
         'access_token': client_key_vk, 'v': '5.120',
@@ -56,10 +56,10 @@ def save_file_to_vk(client_key_vk, group_id_vk, user_id_vk, file_on_server_vk):
 def publish_file_on_wall_vk(
         client_key_vk, owner_id_vk, user_id_vk,
         file_save_on_server_vk,
-        response_from_xcsd
+        response_from_xkcd
         ):
-    filename = response_from_xcsd['title']
-    comment = response_from_xcsd['alt']
+    filename = response_from_xkcd['title']
+    comment = response_from_xkcd['alt']
     url_for_publish = 'https://api.vk.com/method/wall.post'
     owner_id = file_save_on_server_vk['response'][0]['owner_id']
     media_id = file_save_on_server_vk['response'][0]['id']
@@ -81,10 +81,10 @@ def main():
     group_id_vk = os.getenv('access_group_id_vk')
     owner_id_vk = os.getenv('access_owner_id_vk')
     user_id_vk = os.getenv('access_user_id_vk')
-    response_from_xcsd = download_image_from_xcsd()
+    response_from_xkcd = download_image_from_xkcd()
     file_on_server_vk = upload_file_to_vk(
         client_key_vk,
-        group_id_vk, response_from_xcsd
+        group_id_vk, response_from_xkcd
         )
     file_save_on_server_vk = save_file_to_vk(
         client_key_vk, group_id_vk, user_id_vk,
@@ -92,7 +92,7 @@ def main():
         )
     publish_file_on_wall_vk(
         client_key_vk, owner_id_vk, user_id_vk,
-        file_save_on_server_vk, response_from_xcsd
+        file_save_on_server_vk, response_from_xkcd
         )
 
 
